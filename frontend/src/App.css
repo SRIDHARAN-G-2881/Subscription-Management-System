@@ -14,6 +14,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 16px; /* increase base font size for readability */
 }
 
 @keyframes gradient {
@@ -24,16 +25,77 @@ body {
 
 /* ---------- Card ---------- */
 .auth-container {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-  max-width: 420px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.06);
+  max-width: 560px; /* wider vertical card */
   width: 100%;
-  padding: 2.8rem 2.5rem;
+  padding: 3rem 2rem; /* more padding */
   text-align: center;
   overflow: hidden;
 }
+
+/* Single-column auth layout */
+.auth-content {
+  display: block;
+}
+
+.auth-side {
+  display: none; /* hide side panel for vertical theme */
+}
+
+.auth-side h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.auth-side p {
+  color: #475569;
+}
+
+.form-wrapper {
+  max-width: 100%;
+}
+
+/* Center the auth card on the page */
+.auth-outer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 4rem);
+  padding: 2rem;
+}
+
+/* Inputs & buttons refinement */
+.form-wrapper .w-full {
+  border: 1px solid #e6e9ef;
+  box-shadow: inset 0 -1px 0 rgba(16,24,40,0.02);
+}
+
+.form-wrapper input, .form-wrapper select {
+  transition: box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.form-wrapper input:focus, .form-wrapper select:focus {
+  outline: none;
+  border-color: rgba(99,102,241,0.9);
+  box-shadow: 0 6px 18px rgba(99,102,241,0.06);
+}
+
+.form-wrapper button {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  align-items: stretch;
+}
+
+.auth-side h3 { margin-bottom: 0.5rem; }
+.auth-side p { margin: 0; }
 
 .title-main {
   font-size: 2rem;
@@ -55,11 +117,16 @@ body {
   text-align: left;
 }
 
+.form-wrapper {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
 .form-title {
   text-align: center;
-  font-size: 1.8rem;
+  font-size: 2.1rem; /* larger title */
   color: #1e293b;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
 }
 
 .form-label {
@@ -68,11 +135,13 @@ body {
 }
 
 .form-input {
-  padding: 0.9rem 1rem;
+  padding: 1rem 1.1rem; /* larger inputs */
   border: 1px solid #d1d5db;
   border-radius: 10px;
-  background: #f8fafc;
-  transition: border 0.2s ease, box-shadow 0.2s ease;
+  background: #fff;
+  transition: border 0.18s ease, box-shadow 0.18s ease;
+  width: 100%;
+  font-size: 1.05rem;
 }
 
 .form-input:focus {
@@ -84,14 +153,55 @@ body {
 /* ---------- Buttons ---------- */
 .btn {
   width: 100%;
-  padding: 0.9rem;
+  padding: 1.05rem;
   margin-top: 1rem;
   border: none;
+  border-radius: 10px;
+  font-size: 1.05rem; /* slightly larger button text */
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.auth-actions {
+  margin-top: 0.6rem;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+/* Google Auth Button */
+.google-auth-btn {
+  width: 100%;
+  padding: 0.9rem;
+  margin-top: 1rem;
+  border: 1px solid #dadce0;
   border-radius: 10px;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.25s ease;
+  background: white;
+  color: #3c4043;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.google-auth-btn:hover {
+  background: #f8f9fa;
+  border-color: #c1c7cd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.google-auth-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.google-icon {
+  flex-shrink: 0;
 }
 
 .btn-primary {
@@ -307,6 +417,100 @@ body {
   
   .auth-container {
     margin: 1rem;
-    padding: 2rem 1.5rem;
+    padding: 1rem;
   }
+
+  .auth-content { flex-direction: column; }
 }
+
+/* ---------- Manage Users Styles ---------- */
+.manage-users {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.9);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(2,6,23,0.08);
+}
+
+.manage-users h2 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+  color: #0f172a;
+}
+
+.manage-users .users-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.users-table thead th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  color: #0f172a;
+  font-weight: 600;
+  border-bottom: 2px solid #e6edf3;
+}
+
+.users-table tbody td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+}
+
+.users-table tbody tr:hover {
+  background: #fbfdff;
+}
+
+.users-table select {
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+}
+
+.manage-users .pagination {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.manage-users .pagination button {
+  padding: 0.45rem 0.8rem;
+  border-radius: 8px;
+  background: #eef2ff;
+  border: 1px solid #e0e7ff;
+  cursor: pointer;
+}
+
+.manage-users .pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.manage-users .error {
+  margin-top: 0.75rem;
+  color: #b91c1c;
+  background: #fff1f2;
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid #fecaca;
+}
+
+.manage-users .btn-back {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+/* Wide app container for dashboards */
+.app-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 1.5rem auto;
+  padding: 1rem 1.5rem;
+}
+

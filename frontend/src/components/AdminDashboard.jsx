@@ -1,10 +1,14 @@
 import React from 'react';
 import { logout, getUserRole } from '../utils/api';
 
-const AdminDashboard = ({ onLogout }) => {
+const AdminDashboard = ({ onLogout, onNavigate }) => {
   const handleLogout = () => {
     logout();
     onLogout();
+  };
+
+  const openManageUsers = () => {
+    if (onNavigate) onNavigate('manage-users');
   };
 
   return (
@@ -22,7 +26,7 @@ const AdminDashboard = ({ onLogout }) => {
           <div className="feature-card admin-only">
             <h3>👥 User Management</h3>
             <p>Manage all users, roles, and permissions</p>
-            <button className="feature-btn">Manage Users</button>
+            <button className="feature-btn" onClick={openManageUsers}>Manage Users</button>
           </div>
 
           <div className="feature-card admin-only">

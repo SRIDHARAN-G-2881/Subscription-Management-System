@@ -6,6 +6,7 @@ import Home from "./components/Home";
 import LoginForm from "./components/LoginForm";
 import SignupForm from "./components/SignupForm";
 import AdminDashboard from "./components/AdminDashboard";
+import ManageUsers from "./components/ManageUsers";
 import StaffDashboard from "./components/StaffDashboard";
 import AuthGuard from "./components/AuthGuard";
 
@@ -15,7 +16,29 @@ export default function App() {
 
   // Check authentication status on app load
   useEffect(() => {
-    if (isAuthenticated()) {
+    // Handle Google OAuth callback
+    const urlParams = new URLSearchParams(window.location.search);
+    const googleAuth = urlParams.get('googleAuth');
+    const role = urlParams.get('role');
+    
+    if (googleAuth === 'success' && role) {
+      // Store the role from Google OAuth
+      localStorage.setItem('role', role);
+      localStorage.setItem('token', 'google-auth-token'); // Placeholder
+      
+      if (role === USER_ROLES.ADMIN) {
+        setMode(APP_MODES.ADMIN_DASHBOARD);
+      } else if (role === USER_ROLES.STAFF) {
+        setMode(APP_MODES.STAFF_DASHBOARD);
+      }
+      
+      // Clean up URL parameters
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (googleAuth === 'error') {
+      setMessage('❌ Google authentication failed. Please try again.');
+      // Clean up URL parameters
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (isAuthenticated()) {
       const userRole = getUserRole();
       if (userRole === USER_ROLES.ADMIN) {
         setMode(APP_MODES.ADMIN_DASHBOARD);
@@ -64,7 +87,13 @@ export default function App() {
       case APP_MODES.ADMIN_DASHBOARD:
         return (
           <AuthGuard key="admin-dashboard" requiredRole={USER_ROLES.ADMIN}>
-            <AdminDashboard onLogout={handleLogout} />
+            <AdminDashboard onLogout={handleLogout} onNavigate={switchTo} />
+          </AuthGuard>
+        );
+      case APP_MODES.MANAGE_USERS:
+        return (
+          <AuthGuard key="manage-users" requiredRole={USER_ROLES.ADMIN}>
+            <ManageUsers onBack={() => setMode(APP_MODES.ADMIN_DASHBOARD)} />
           </AuthGuard>
         );
       case APP_MODES.STAFF_DASHBOARD:
@@ -80,12 +109,21 @@ export default function App() {
 
   return (
     <div className="page-container">
-      <div className="auth-container">
-        <div className="fade-slide">
-          {renderCurrentMode()}
-          {message && <p className="message">{message}</p>}
+      {([APP_MODES.HOME, APP_MODES.LOGIN, APP_MODES.SIGNUP].includes(mode)) ? (
+        <div className="auth-container">
+          <div className="fade-slide">
+            {renderCurrentMode()}
+            {message && <p className="message">{message}</p>}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="app-container">
+          <div className="fade-slide">
+            {renderCurrentMode()}
+            {message && <p className="message">{message}</p>}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

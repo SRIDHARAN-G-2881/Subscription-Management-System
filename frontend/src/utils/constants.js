@@ -13,7 +13,8 @@ export const APP_MODES = {
   LOGIN: "login",
   SIGNUP: "signup",
   ADMIN_DASHBOARD: "admin-dashboard",
-  STAFF_DASHBOARD: "staff-dashboard"
+  STAFF_DASHBOARD: "staff-dashboard",
+  MANAGE_USERS: "manage-users"
 };
 
 // Local Storage Keys
