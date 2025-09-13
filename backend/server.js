@@ -9,6 +9,7 @@ import passport from './config/passport.js';
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import planroute from './routes/planRoutes.js';
 import { errorHandler } from './middlewares/errorMiddleware.js';
 
 connectDB();
@@ -22,6 +23,7 @@ app.use(cookieParser());
 app.use(passport.initialize());
 
 app.use('/api/auth', authRoutes);
+app.use('/api/plan',planroute);
 
 
 // global error handler (after routes)
