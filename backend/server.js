@@ -14,19 +14,15 @@ import { errorHandler } from './middlewares/errorMiddleware.js';
 connectDB();
 
 const app = express();
-
+const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
+app.use(cors({ origin: CLIENT_URL, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
-// Initialize Passport
 app.use(passport.initialize());
 
-// CORS - allow credentials and origin from env (fallback)
-const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
-app.use(cors({ origin: CLIENT_URL, credentials: true }));
-
 app.use('/api/auth', authRoutes);
-app.use('/api/admin', adminRoutes);
+
 
 // global error handler (after routes)
 app.use(errorHandler);

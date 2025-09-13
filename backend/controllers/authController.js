@@ -27,14 +27,13 @@ export const register = async (req, res) => {
       const user = new userModel({
           name,
           email,
-          password: hashedPassword,
+          passwordHash: hashedPassword,
           role,
           isEmailVerified: false
       });
 
       await user.save();
 
-      // Generate JWT token with role
 
       return res.status(201).json({
           success: true,
@@ -55,62 +54,64 @@ export const register = async (req, res) => {
   }
 };
 export const login = async (req, res) => {
-  const { email, password ,role} = req.body;
-  if (!email || !password||!role) {
-      return res.status(400).json({
-          success: false,
-          message: "Email ,password and role are required"
-      });
+  const { email, password, role } = req.body;
+
+  // Validate input
+  if (!email || !password || !role) {
+    return res.status(400).json({
+      success: false,
+      message: "Email, password and role are required",
+    });
   }
 
   try {
-      const user = await userModel.findOne({ email });
-      if (!user) {
-          return res.status(401).json({
-              success: false,
-              message: "Account is not registered. Please register and sign up."
-          });
-      }
-
-      // Check if user has a password (not Google OAuth only)
-      if (!user.password) {
-          return res.status(401).json({
-              success: false,
-              message: "Please use Google sign-in for this account"
-          });
-      }
-
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) {
-          return res.status(401).json({
-              success: false,
-              message: "Invalid credentials"
-          });
-      }
-
-      // Update last login
-      user.lastLogin = new Date();
-      await user.save();
-
-
-      // Set secure cook
-
-      return res.status(200).json({
-          success: true,
-          message: "Login successful",
-          user: {
-              id: user._id,
-              name: user.name,
-              email: user.email,
-              role:user.role,
-              isEmailVerified: user.isEmailVerified
-          }
+    // Find user by email
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Account is not registered. Please register and sign up.",
       });
+    }
+
+    // Compare hashed password
+    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid credentials",
+      });
+    }
+
+    // Check role (make sure login role matches stored role)
+    if (user.role !== role) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to login as this role",
+      });
+    }
+
+    // Update last login
+    user.lastLogin = new Date();
+    await user.save();
+
+    // Success response
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isEmailVerified: user.isEmailVerified,
+      },
+    });
   } catch (error) {
-      return res.status(500).json({
-          success: false,
-          message: error.message
-      });
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 export const logout = async (req, res) => {

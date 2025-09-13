@@ -1,21 +1,12 @@
-// import express from 'express';
-// import { register, login, dashboard, logout, googleAuth, googleCallback } from '../controllers/authController.js';
-// import { protect } from '../middlewares/authMiddleware.js';
+import express from 'express';
+import { register, login, logout } from '../controllers/authController.js';
 
-const router = express.Router();
 
-// // Public
-// router.post('/signup', register);
-// router.post('/login', login);
+const authroute = express.Router();
 
-// // Google OAuth
-// router.get('/google', googleAuth);
-// router.get('/google/callback', googleCallback);
+authroute.post('/register',register);
+authroute.post('/login',login);
+authroute.post('/logout',logout);   
+export default authroute;
 
-// // Protected
-// router.get('/dashboard', protect, dashboard);
 
-// // Logout
-// router.post('/logout', logout);
-
-export default router;
